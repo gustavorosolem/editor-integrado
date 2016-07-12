@@ -1,9 +1,9 @@
 var api_url = 'http://api.lojaintegrada.com.br/api/v1/';
 var api_url_alternative = 'http://synergyconsulting.com.br/li-manager/v1/';
 var api_chave_aplicacao = '7a7134e1-dfc3-4922-b145-eb8b605171aa';
-//var api_chave_api = '20bfdd1a-51c4-4996-aedc-e53c132e1779'; // Testes
+var api_chave_api = '20bfdd1a-51c4-4996-aedc-e53c132e1779'; // Testes
 //var api_chave_api = '93bfd522-c8f0-4723-97cc-45099131fa05'; // Muitos pedidos
-var api_chave_api = '1d8bc51e-bff6-40e6-bd86-3e8beb6a9c12'; //Dona Pulga
+//var api_chave_api = '1d8bc51e-bff6-40e6-bd86-3e8beb6a9c12'; //Dona Pulga
 
 var ListagemProdutos = React.createClass({
   getInitialState: function() {
@@ -11,7 +11,7 @@ var ListagemProdutos = React.createClass({
   },
   loadProdutosFromAPI: function() {
     $.ajax({
-      url: this.props.url + "produto?limit=10&offset=20",
+      url: this.props.url + "produto?limit=10&offset=0",
       data: {
         chave_api: api_chave_api,
         chave_aplicacao: api_chave_aplicacao
@@ -33,28 +33,31 @@ var ListagemProdutos = React.createClass({
     var retorno = this.state.data.objects;
     var url = this.props.url;
     var $this = this;
+    console.log(retorno)
+    iterate();
     function iterate() {
-      if(retorno[loopTime].ativo === undefined ) {
-        $.ajax({
-          url: url + "produto/" + retorno[loopTime].id,
-          data: {
-            chave_api: api_chave_api,
-            chave_aplicacao: api_chave_aplicacao
-          },
-          dataType: 'json',
-          cache: false,
-          success: function(data) {
-            $this.setState({produtos: $this.state.produtos.concat([data])});
-            loopTime++;
-            if (loopTime < retorno.length) { iterate(); }
-          }.bind($this),
-          error: function(xhr, status, err) {
-            console.error($this.props.url, status, err.toString());
-          }.bind($this)
-        });
+      if(retorno[loopTime]) {
+        if(retorno[loopTime].ativo === undefined ) {
+          $.ajax({
+            url: url + "produto/" + retorno[loopTime].id,
+            data: {
+              chave_api: api_chave_api,
+              chave_aplicacao: api_chave_aplicacao
+            },
+            dataType: 'json',
+            cache: false,
+            success: function(data) {
+              $this.setState({produtos: $this.state.produtos.concat([data])});
+              loopTime++;
+              if (loopTime < retorno.length) { iterate(); }
+            }.bind($this),
+            error: function(xhr, status, err) {
+              console.error($this.props.url, status, err.toString());
+            }.bind($this)
+          });
+        }
       }
     }
-    iterate();
   },
   componentDidMount: function() {
     this.loadProdutosFromAPI();
@@ -67,6 +70,7 @@ var ListagemProdutos = React.createClass({
 });
 var ProdutoTR = React.createClass({
   render: function() {
+    var $this = this
     // Handle case where the response is not here yet
     if (!this.props.produtos) {
      // Note that you can return false it you want nothing to be put in the dom
@@ -93,18 +97,63 @@ var ProdutoTR = React.createClass({
   }
 });
 var Produto = React.createClass({
+  getInitialState: function() {
+    return {
+      ativo: this.props.data.ativo,
+      destaque: this.props.data.destaque,
+      data: this.props.data
+    };
+  },
+  ajaxPUT: function(data) {
+    console.log(data)
+    data.categorias = this.state.data.categorias;
+    data.chave_api = api_chave_api;
+    data.chave_aplicacao = api_chave_aplicacao;
+    $.ajax({
+      url: "http://synergyconsulting.com.br/li-manager/v1/produto/" + this.state.data.id,
+      dataType: 'json',
+      type: 'PUT',
+      data: data,
+      success: function(data) {
+        this.setState({data: data});
+        console.log(data)
+      }.bind(this),
+      error: function(xhr, status, err) {
+        this.setState({ativo: this.state.data.ativo});
+        this.setState({destaque: this.state.data.destaque});
+        console.error(this.props.url, status, err.toString());
+        console.log(err)
+      }.bind(this)
+    });
+  },
+  alterarStatus: function(event) {
+    this.setState({ativo: event.target.checked});
+    this.ajaxPUT(
+      {
+        "ativo": event.target.checked
+      }
+    );
+  },
+  alterarDestaque: function(event) {
+    this.setState({destaque: !this.state.data.destaque});
+    this.ajaxPUT(
+      {
+        "destaque": !this.state.data.destaque
+      }
+    );
+  },
   render: function() {
-    var produto = this.props.data;
+    var produto = this.state.data;
     return (
       <tr>
         <td>
           <div className="ckbox">
-            <input type="checkbox" id={produto.id} defaultChecked={produto.ativo} />
+            <input type="checkbox" id={produto.id} checked={this.state.ativo} onChange={this.alterarStatus} />
             <label htmlFor={produto.id}></label>
           </div>
         </td>
         <td>
-          <a href="javascript:;" className={produto.destaque ? "star star-checked" : "star"}>
+          <a href="javascript:;" onClick={this.alterarDestaque} className={this.state.destaque ? "star star-checked" : "star"}>
             <i className="glyphicon glyphicon-star"></i>
           </a>
         </td>

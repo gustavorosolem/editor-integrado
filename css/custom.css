@@ -36,7 +36,6 @@ body {
 	border-bottom: 1px solid #eee;
 }
 .table-filter tbody tr:hover {
-	cursor: pointer;
 	background-color: #eee;
 }
 .table-filter tbody tr td {
