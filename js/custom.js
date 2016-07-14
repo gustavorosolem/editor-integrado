@@ -1,9 +1,7 @@
 var api_url = 'http://api.lojaintegrada.com.br/api/v1/';
 var api_url_alternative = 'http://synergyconsulting.com.br/li-manager/v1/';
 var api_chave_aplicacao = '7a7134e1-dfc3-4922-b145-eb8b605171aa';
-var api_chave_api = '20bfdd1a-51c4-4996-aedc-e53c132e1779'; // Testes
-//var api_chave_api = '93bfd522-c8f0-4723-97cc-45099131fa05'; // Muitos pedidos
-//var api_chave_api = '1d8bc51e-bff6-40e6-bd86-3e8beb6a9c12'; //Dona Pulga
+var api_chave_api = (localStorage.getItem("chave_api") == 'teste' ? '20bfdd1a-51c4-4996-aedc-e53c132e1779' : localStorage.getItem("chave_api")); // Testes
 
 var ListagemProdutos = React.createClass({
   getInitialState: function() {
@@ -11,7 +9,7 @@ var ListagemProdutos = React.createClass({
   },
   loadProdutosFromAPI: function() {
     $.ajax({
-      url: this.props.url + "produto?limit=10&offset=0",
+      url: this.props.url + "produto?limit=20&offset=0",
       data: {
         chave_api: api_chave_api,
         chave_aplicacao: api_chave_aplicacao
@@ -25,6 +23,9 @@ var ListagemProdutos = React.createClass({
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
+        localStorage.removeItem("chave_api");
+        alert('Chave API incorreta');
+        window.location = 'index.html'
       }.bind(this)
     });
   },
@@ -75,12 +76,12 @@ var ProdutoTR = React.createClass({
     if (!this.props.produtos) {
      // Note that you can return false it you want nothing to be put in the dom
      // This is also your chance to render a spinner or something...
-     return <tbody><tr><td>The responsive it not here yet!</td></tr></tbody>;
+     return <tbody><tr><td>Carregando...</td></tr></tbody>;
     }
     // Gives you the opportunity to handle the case where the ajax request
     // completed but the result array is empty
     if (this.props.produtos.length === 0) {
-      return <tbody><tr><td>No result found for this subscription</td></tr></tbody>;
+      return <tbody><tr><td>Carregando...</td></tr></tbody>;
     }
     // Normal case
     console.log(this.props.produtos)
@@ -110,7 +111,7 @@ var Produto = React.createClass({
     data.chave_api = api_chave_api;
     data.chave_aplicacao = api_chave_aplicacao;
     $.ajax({
-      url: "http://synergyconsulting.com.br/li-manager/v1/produto/" + this.state.data.id,
+      url: api_url_alternative + "produto/" + this.state.data.id,
       dataType: 'json',
       type: 'PUT',
       data: data,
@@ -177,7 +178,23 @@ var Produto = React.createClass({
   }
 });
 
+var Logout = React.createClass({
+  logout: function(event) {
+    localStorage.removeItem("chave_api");
+    window.location = 'index.html'
+  },
+  render: function() {
+    return (
+      <a href="javascript:;" className="btn btn-default btn-filter" data-target="all" onClick={this.logout}>Logout</a>
+    );
+  }
+});
+
 ReactDOM.render(
   <ListagemProdutos url={api_url} />,
   document.getElementById('listagemProdutos')
+);
+ReactDOM.render(
+  <Logout />,
+  document.getElementById('logout')
 );

@@ -1,190 +1,84 @@
 ﻿<!doctype html>
 <html>
   <head>
-    <title>ReactJS</title>
+    <title>Editor Integrado</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous" />
-    <link rel="stylesheet" href="css/custom.css" />
+    <style>
+      body {
+        padding-top: 120px;
+        padding-bottom: 40px;
+        background-color: #eee;
+      
+      }
+      .btn 
+      {
+       outline:0;
+       border:none;
+       border-top:none;
+       border-bottom:none;
+       border-left:none;
+       border-right:none;
+       box-shadow:inset 2px -3px rgba(0,0,0,0.15);
+      }
+      .btn:focus
+      {
+       outline:0;
+       -webkit-outline:0;
+       -moz-outline:0;
+      }
+      .fullscreen_bg {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-size: cover;
+        background-position: 50% 50%;
+        background-image: url('img/color-splash.jpg');
+        background-repeat:repeat;
+        z-index: -1;
+      }
+      .form-signin {
+        max-width: 280px;
+        padding: 15px;
+        margin: 0 auto;
+          margin-top:50px;
+      }
+      .form-signin .form-signin-heading, .form-signin {
+        margin-bottom: 10px;
+      }
+      .form-signin .form-control {
+        position: relative;
+        font-size: 16px;
+        height: auto;
+        padding: 10px;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+      .form-signin .form-control:focus {
+        z-index: 2;
+      }
+      .form-signin input[type="text"] {
+        margin-bottom: 10px;
+        border-style: solid;
+        border-color: #000;
+      }
+      .form-signin-heading {
+        color: #fff;
+        text-align: center;
+        text-shadow: 0 2px 2px rgba(0,0,0,0.5);
+      }
+    </style>
   </head>
   <body>
-    <div class="container">
-      <div class="row">
-        <section class="content">
-          <h1>Table Filter</h1>
-          <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-              <div class="panel-body">
-                <div class="pull-right">
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-success btn-filter" data-target="pagado">Pagado</button>
-                    <button type="button" class="btn btn-warning btn-filter" data-target="pendiente">Pendiente</button>
-                    <button type="button" class="btn btn-danger btn-filter" data-target="cancelado">Cancelado</button>
-                    <button type="button" class="btn btn-default btn-filter" data-target="all">Todos</button>
-                  </div>
-                </div>
-                <div class="table-container">
-                  <table class="table table-filter" id="listagemProdutos">
-                    <tbody>
-                      <tr data-status="pagado">
-                        <td>
-                          <div class="ckbox">
-                            <input type="checkbox" id="checkbox1">
-                            <label for="checkbox1"></label>
-                          </div>
-                        </td>
-                        <td>
-                          <a href="javascript:;" class="star">
-                            <i class="glyphicon glyphicon-star"></i>
-                          </a>
-                        </td>
-                        <td>
-                          <div class="media">
-                            <a href="#" class="pull-left">
-                              <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo">
-                            </a>
-                            <div class="media-body">
-                              <span class="media-meta pull-right">Febrero 13, 2016</span>
-                              <h4 class="title">
-                                Lorem Impsum
-                                <span class="pull-right pagado">(Pagado)</span>
-                              </h4>
-                              <p class="summary">Ut enim ad minim veniam, quis nostrud exercitation...</p>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr data-status="pendiente">
-                        <td>
-                          <div class="ckbox">
-                            <input type="checkbox" id="checkbox3">
-                            <label for="checkbox3"></label>
-                          </div>
-                        </td>
-                        <td>
-                          <a href="javascript:;" class="star">
-                            <i class="glyphicon glyphicon-star"></i>
-                          </a>
-                        </td>
-                        <td>
-                          <div class="media">
-                            <a href="#" class="pull-left">
-                              <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo">
-                            </a>
-                            <div class="media-body">
-                              <span class="media-meta pull-right">Febrero 13, 2016</span>
-                              <h4 class="title">
-                                Lorem Impsum
-                                <span class="pull-right pendiente">(Pendiente)</span>
-                              </h4>
-                              <p class="summary">Ut enim ad minim veniam, quis nostrud exercitation...</p>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr data-status="cancelado">
-                        <td>
-                          <div class="ckbox">
-                            <input type="checkbox" id="checkbox2">
-                            <label for="checkbox2"></label>
-                          </div>
-                        </td>
-                        <td>
-                          <a href="javascript:;" class="star">
-                            <i class="glyphicon glyphicon-star"></i>
-                          </a>
-                        </td>
-                        <td>
-                          <div class="media">
-                            <a href="#" class="pull-left">
-                              <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo">
-                            </a>
-                            <div class="media-body">
-                              <span class="media-meta pull-right">Febrero 13, 2016</span>
-                              <h4 class="title">
-                                Lorem Impsum
-                                <span class="pull-right cancelado">(Cancelado)</span>
-                              </h4>
-                              <p class="summary">Ut enim ad minim veniam, quis nostrud exercitation...</p>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr data-status="pagado" class="selected">
-                        <td>
-                          <div class="ckbox">
-                            <input type="checkbox" id="checkbox4" checked>
-                            <label for="checkbox4"></label>
-                          </div>
-                        </td>
-                        <td>
-                          <a href="javascript:;" class="star star-checked">
-                            <i class="glyphicon glyphicon-star"></i>
-                          </a>
-                        </td>
-                        <td>
-                          <div class="media">
-                            <a href="#" class="pull-left">
-                              <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo">
-                            </a>
-                            <div class="media-body">
-                              <span class="media-meta pull-right">Febrero 13, 2016</span>
-                              <h4 class="title">
-                                Lorem Impsum
-                                <span class="pull-right pagado">(Pagado)</span>
-                              </h4>
-                              <p class="summary">Ut enim ad minim veniam, quis nostrud exercitation...</p>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr data-status="pendiente">
-                        <td>
-                          <div class="ckbox">
-                            <input type="checkbox" id="checkbox5">
-                            <label for="checkbox5"></label>
-                          </div>
-                        </td>
-                        <td>
-                          <a href="javascript:;" class="star">
-                            <i class="glyphicon glyphicon-star"></i>
-                          </a>
-                        </td>
-                        <td>
-                          <div class="media">
-                            <a href="#" class="pull-left">
-                              <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo">
-                            </a>
-                            <div class="media-body">
-                              <span class="media-meta pull-right">Febrero 13, 2016</span>
-                              <h4 class="title">
-                                Lorem Impsum
-                                <span class="pull-right pendiente">(Pendiente)</span>
-                              </h4>
-                              <p class="summary">Ut enim ad minim veniam, quis nostrud exercitation...</p>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-            <div id="container" class="content-footer">
-              <p>
-                Page © - 2016
-              </p>
-            </div>
-          </div>
-        </section>
-      </div>
-    </div>
-    
-    
+    <div id="fullscreen_bg" class="fullscreen_bg"></div>
+    <div class="container" id="login-container"></div>
     <script src="https://fb.me/react-15.2.0.js"></script>
     <script src="https://fb.me/react-dom-15.2.0.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-cookie/0.4.7/react-cookie.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.0/moment.min.js"></script>
-    <script type="text/babel" src="js/custom.js"></script>
+    <script type="text/babel" src="js/home.js"></script>
   </body>
 </html>
